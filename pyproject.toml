@@ -28,3 +28,8 @@ line-length = 88
 target-version = "py310"
 select = ["E", "F", "B"]  # 기본 린트 규칙 (E: pep8, F: pyflakes, B: bugbear)
 ignore = ["E501"]         # 예: 긴 줄 허용
+
+[tool.aerich]
+tortoise_orm = "app.config.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."

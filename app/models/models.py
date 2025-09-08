@@ -1,9 +1,6 @@
-from sqlalchemy import Column, Integer, String
-from database import Base
+from tortoise import fields
+from tortoise.models import Model
 
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, index=True)
-    age = Column(Integer)
+class User(Model):
+    id = fields.IntField(pk=True)
+    name = fields.CharField(max_length=50)
