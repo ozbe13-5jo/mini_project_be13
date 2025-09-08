@@ -1,0 +1,26 @@
+[project]
+name = "miniproject"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.1.0",
+    "ruff>=0.12.12",
+]
+prod = [
+    "fastapi>=0.116.1",
+    "pydantic-settings>=2.10.1",
+    "uvicorn[standard]>=0.35.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+select = ["E", "F", "B"]  # 기본 린트 규칙 (E: pep8, F: pyflakes, B: bugbear)
+ignore = ["E501"]         # 예: 긴 줄 허용
