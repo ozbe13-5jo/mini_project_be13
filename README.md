@@ -1,3 +1,3 @@
-# Base branch for initial PR
+# 미니 프로젝트 BE13
 
-이 브랜치는 초기 PR의 기준(main)입니다.
+<img width="1197" height="595" alt="스크린샷 2025-09-08 오후 5 52 31" src="https://github.com/user-attachments/assets/c0a66091-c6ca-44cb-a825-b653f6b792f1" />
