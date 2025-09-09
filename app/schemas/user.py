@@ -24,6 +24,14 @@ class UserSignupResponse(BaseModel):
     created_at: datetime
 
 
+class UserResponse(BaseModel):
+    id: int
+    username: str
+
+class TokenPair(BaseModel):
+    access_token: str
+    refresh_token: str
+
 # 예시 API 엔드포인트 스펙 설명
 """
 POST /api/users/signup
