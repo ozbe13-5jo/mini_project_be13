@@ -10,6 +10,7 @@ from pydantic import EmailStr
 
 from app.db import init_tortoise
 from app.models import User, TokenBlacklist
+from app.routers import quote
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
 
 
@@ -79,7 +80,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Diary Project", lifespan=lifespan)
 
-
+app.include_router(quote.router, prefix="/quotes")
 # Note: Only common + auth endpoints are included.
 
 

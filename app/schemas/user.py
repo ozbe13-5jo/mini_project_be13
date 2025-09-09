@@ -31,3 +31,16 @@ Request Body: UserSignupRequest
 Response Body: UserSignupResponse
 Status Code: 201 Created
 """
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    nickname: Optional[str] = None
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    created_at: datetime
+
+class TokenPair(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
