@@ -1,10 +1,17 @@
 import os
 import asyncio
+from fastapi import FastAPI
 from tortoise import Tortoise
 from dotenv import load_dotenv
 from app.models import User  # models.py 안 User 모델
 from app.config import DB_CONFIG
+from app.routers import quote
+from app.crud.bookmark import is_bookmarked, add_bookmark, remove_bookmark
 
+app = FastAPI(title="Quotes App")
+
+# 라우터 등록
+app.include_router(quote.router)
 
 load_dotenv()
 
@@ -27,4 +34,5 @@ async def init():
     users = await User.all()
     print([u.name for u in users])
 
-asyncio.run(init())
+if __name__ == "__main__":
+    asyncio.run(init())
