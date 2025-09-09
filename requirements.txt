@@ -1,0 +1,8 @@
+fastapi
+tortoise-orm
+aiosqlite
+passlib[bcrypt]
+python-jose[cryptography]
+uvicorn
+python-multipart
+email-validator
