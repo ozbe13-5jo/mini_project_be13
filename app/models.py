@@ -1,30 +1,26 @@
-from tortoise import fields
-from tortoise.models import Model
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, func
+from sqlalchemy.orm import relationship
+from app.database import Base
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), unique=True, nullable=False)
+    password = Column(String(200), nullable=False)
+
+    diaries = relationship("Diary", back_populates="author")
 
 
-class User(Model):
-    id = fields.IntField(primary_key=True)
-    email = fields.CharField(max_length=255, unique=True, db_index=True)
-    password_hash = fields.CharField(max_length=255)
-    nickname = fields.CharField(max_length=100, null=True)
-    created_at = fields.DatetimeField(auto_now_add=True)
+class Diary(Base):
+    __tablename__ = "diaries"
 
-    token_blacklist: fields.ReverseRelation["TokenBlacklist"]
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(100), nullable=False)
+    content = Column(Text, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    class Meta:
-        table = "users"
+    author = relationship("User", back_populates="diaries")
 
-
-class TokenBlacklist(Model):
-    id = fields.IntField(primary_key=True)
-    token = fields.CharField(max_length=1000, unique=True)
-    user: fields.ForeignKeyRelation[User] = fields.ForeignKeyField(
-        "models.User", related_name="token_blacklist", on_delete=fields.CASCADE, null=True
-    )
-    expired_at = fields.DatetimeField()
-    created_at = fields.DatetimeField(auto_now_add=True)
-
-    class Meta:
-        table = "token_blacklist"
-
-__all__ = ["User", "TokenBlacklist"]
