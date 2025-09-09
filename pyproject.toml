@@ -1,35 +1,13 @@
 [project]
-name = "miniproject"
+name = "FastAPI-app"
 version = "0.1.0"
-description = "Add your description here"
+description = "A simple FastAPI application."
+
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = []
+requires-python = ">=3.10"
 
-[dependency-groups]
-dev = [
-    "aerich[toml]>=0.9.1",
-    "httpx>=0.28.1",
-    "pytest>=8.4.2",
-    "pytest-asyncio>=1.1.0",
-    "python-dotenv>=1.1.1",
-    "ruff>=0.12.12",
-]
-prod = [
-    "asyncpg>=0.30.0",
-    "fastapi>=0.116.1",
-    "pydantic-settings>=2.10.1",
-    "tortoise-orm>=0.25.1",
-    "uvicorn[standard]>=0.35.0",
-]
+[project.dependencies]
+dependencies = "requirements.txt"
 
-[tool.ruff]
-line-length = 88
-target-version = "py310"
-select = ["E", "F", "B"]  # 기본 린트 규칙 (E: pep8, F: pyflakes, B: bugbear)
-ignore = ["E501"]         # 예: 긴 줄 허용
-
-[tool.aerich]
-tortoise_orm = "app.config.TORTOISE_ORM"
-location = "./migrations"
-src_folder = "./."
+[project.optional-dependencies]
+dev-requirements = {file = "dev-requirements.txt"}
