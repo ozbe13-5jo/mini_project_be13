@@ -30,3 +30,6 @@ async def create_bookmark(quote_id: int, user: User = Depends(get_current_user))
 async def delete_bookmark(quote_id: int, user: User = Depends(get_current_user)):
     await remove_bookmark(user, quote_id)
     return {"message": "Bookmark deleted"}
+
+
+# 도야머야ㅏ
