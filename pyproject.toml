@@ -6,8 +6,19 @@ description = "A simple FastAPI application."
 readme = "README.md"
 requires-python = ">=3.10"
 
-[project.dependencies]
-dependencies = "requirements.txt"
+dependencies = [
+  "fastapi",
+  "tortoise-orm",
+  "aiosqlite",
+  "passlib[bcrypt]",
+  "python-jose[cryptography]",
+  "uvicorn",
+  "python-multipart",
+  "email-validator"
+]
 
-[project.optional-dependencies]
-dev-requirements = {file = "dev-requirements.txt"}
+dev-requirements = [
+    "uvicorn[standard]",
+    "pytest",
+    "gunicorn",
+]

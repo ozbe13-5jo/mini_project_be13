@@ -39,3 +39,17 @@ Request Body: UserSignupRequest
 Response Body: UserSignupResponse
 Status Code: 201 Created
 """
+
+class UserPostCreate(BaseModel):
+    username: str
+
+class UserPostLogin(BaseModel):
+    username: str
+    password: str
+
+class UserPostResponse(BaseModel):
+    id: int
+    username: str
+
+    class Config:
+        orm_mode = True
