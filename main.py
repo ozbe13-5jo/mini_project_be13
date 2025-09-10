@@ -12,9 +12,9 @@ from app.db import init_tortoise
 from app.models import User, TokenBlacklist
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
 
-
-# app = FastAPI(title="Diary Project")  # Moved below with lifespan
-
+# 랜덤 질문 API 관련 import
+from app.models import Question
+from app.routers import questions
 
 # --------------------
 # Settings / Security
@@ -73,20 +73,22 @@ from contextlib import asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     init_tortoise(app, db_url=os.getenv("DB_URL", "sqlite://db.sqlite3"))
+    
+    # 랜덤 질문 데이터 초기화
+    await add_sample_questions()
+    
     yield
     # Shutdown
     pass
 
 app = FastAPI(title="Diary Project", lifespan=lifespan)
 
-
-# Note: Only common + auth endpoints are included.
-
+# 랜덤 질문 라우터 등록
+app.include_router(questions.router, prefix="/api/questions", tags=["questions"])
 
 # --------------------
 # Auth / Users
 # --------------------
-
 
 @app.post("/api/users/signup", response_model=UserResponse, status_code=201)
 async def signup(payload: UserSignupRequest) -> UserResponse:
@@ -136,5 +138,29 @@ async def me(user: User = Depends(get_current_user)) -> UserResponse:
     )
 
 
-# Note: Non-auth feature endpoints (diaries, quotes/bookmarks, questions)
-# will be implemented by teammates. Only auth is included here.
+# 랜덤 질문 관련 함수
+async def add_sample_questions():
+    """샘플 질문 데이터를 데이터베이스에 추가"""
+    questions_data = [
+        "오늘 하루 중 가장 기억에 남는 순간은 무엇인가요?",
+        "오늘 나에게 가장 큰 영향을 준 사람은 누구인가요?",
+        "오늘 하루를 한 단어로 표현한다면 무엇인가요?",
+        "오늘 나는 어떤 감정을 가장 많이 느꼈나요?",
+        "오늘 하루 중 가장 감사했던 일은 무엇인가요?",
+        "오늘 나는 어떤 도전을 했나요?",
+        "오늘 하루 중 가장 힘들었던 순간은 언제였나요?",
+        "오늘 나는 어떤 성장을 했나요?",
+        "오늘 하루를 다시 살 수 있다면 무엇을 다르게 하고 싶나요?",
+        "오늘 나에게 가장 중요한 교훈은 무엇인가요?",
+        "오늘 하루 중 가장 행복했던 순간은 언제였나요?",
+        "오늘 나는 어떤 목표를 달성했나요?",
+        "오늘 하루 중 가장 아쉬웠던 일은 무엇인가요?",
+        "오늘 나는 어떤 새로운 것을 배웠나요?",
+        "오늘 하루를 마무리하며 나에게 하고 싶은 말은 무엇인가요?"
+    ]
+    
+    # 기존 질문이 있는지 확인
+    existing_count = await Question.all().count()
+    if existing_count == 0:
+        for question_content in questions_data:
+            await Question.create(content=question_content, category="자기성찰")
