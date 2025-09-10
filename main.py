@@ -8,13 +8,14 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
-from app.db import init_tortoise
-from app.models import User, TokenBlacklist
+from app.db import init_db
+from app.models import User, TokenBlacklist, Question
+from app.routers import quote, questions
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
 
-# 랜덤 질문 API 관련 import
-from app.models import Question
-from app.routers import questions
+
+# app = FastAPI(title="Diary Project")  # Moved below with lifespan
+
 
 # --------------------
 # Settings / Security
@@ -68,27 +69,31 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
 
 
 from contextlib import asynccontextmanager
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     # Startup
+#     init_tortoise(app, db_url=os.getenv("DB_URL", "sqlite://db.sqlite3"))
+#
+#     # 랜덤 질문 데이터 초기화
+#     await add_sample_questions()
+#
+#     yield
+#     # Shutdown
+#     pass
+app = FastAPI(title="Diary Project")
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    init_tortoise(app, db_url=os.getenv("DB_URL", "sqlite://db.sqlite3"))
-    
-    # 랜덤 질문 데이터 초기화
-    await add_sample_questions()
-    
-    yield
-    # Shutdown
-    pass
+init_db()
 
-app = FastAPI(title="Diary Project", lifespan=lifespan)
 
 # 랜덤 질문 라우터 등록
 app.include_router(questions.router, prefix="/api/questions", tags=["questions"])
 
+app.include_router(quote.router)
+
 # --------------------
 # Auth / Users
 # --------------------
+
 
 @app.post("/api/users/signup", response_model=UserResponse, status_code=201)
 async def signup(payload: UserSignupRequest) -> UserResponse:
@@ -158,7 +163,7 @@ async def add_sample_questions():
         "오늘 나는 어떤 새로운 것을 배웠나요?",
         "오늘 하루를 마무리하며 나에게 하고 싶은 말은 무엇인가요?"
     ]
-    
+
     # 기존 질문이 있는지 확인
     existing_count = await Question.all().count()
     if existing_count == 0:

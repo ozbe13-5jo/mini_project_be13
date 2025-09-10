@@ -1,16 +1,23 @@
 from fastapi import APIRouter, Depends
-from app.models import User
+from app.models import User, Quote
 from app.crud.bookmark import is_bookmarked, add_bookmark, remove_bookmark
 from app.dependencies import get_current_user
+import random
 
 router = APIRouter(prefix="/quote", tags=["quote"])
+
+# 전체 명언 조회
+@router.get("/")
+async def get_quotes():
+    return await Quote.all()
 
 # 랜덤 명언 제공
 @router.get("/random")
 async def random_quote(user: User = Depends(get_current_user)):
-    quote = await user.get_random_quote()
-    if not quote:
+    quotes = await Quote.all()
+    if not quotes:
         return {"message": "No quotes available."}
+    quote = random.choice(quotes)  # DB에서 가져온 리스트 중 랜덤 선택
     return {"id": quote.id, "content": quote.quote_content, "author": quote.author}
 
 # 북마크 조회
@@ -30,6 +37,3 @@ async def create_bookmark(quote_id: int, user: User = Depends(get_current_user))
 async def delete_bookmark(quote_id: int, user: User = Depends(get_current_user)):
     await remove_bookmark(user, quote_id)
     return {"message": "Bookmark deleted"}
-
-
-# 도야머야ㅏ

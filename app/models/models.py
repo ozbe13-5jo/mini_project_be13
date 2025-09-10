@@ -1,3 +1,5 @@
+import random
+
 from tortoise import fields, models
 from tortoise.contrib.postgres.functions import Random
 # ----------------------------
@@ -11,6 +13,11 @@ class User(models.Model):
     nickname = fields.CharField(max_length=255, null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
 
+    async def get_random_quote(self):
+        quotes = await Quote.all()
+        if not quotes:
+            return None
+        return random.choice(quotes)
     # Relations
     diaries: fields.ReverseRelation["Diary"]
     bookmarks: fields.ReverseRelation["Bookmark"]
