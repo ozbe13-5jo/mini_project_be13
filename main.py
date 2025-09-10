@@ -8,8 +8,9 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
-from app.db import init_tortoise
+from app.db import init_tortoise, DB_URL
 from app.models import User, TokenBlacklist
+from app.routers import quote
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
 
 
@@ -79,7 +80,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Diary Project", lifespan=lifespan)
 
-
+app.include_router(quote.router)
 # Note: Only common + auth endpoints are included.
 
 
