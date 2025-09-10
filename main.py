@@ -6,9 +6,8 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from pydantic import EmailStr
 
-from app.db import init_tortoise, DB_URL
+from app.db import init_db
 from app.models import User, TokenBlacklist
 from app.routers import quote
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
@@ -70,15 +69,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
 
 from contextlib import asynccontextmanager
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    init_tortoise(app, db_url=os.getenv("DB_URL", "sqlite://db.sqlite3"))
-    yield
-    # Shutdown
-    pass
+app = FastAPI(title="Diary Project")
 
-app = FastAPI(title="Diary Project", lifespan=lifespan)
+init_db()
 
 app.include_router(quote.router)
 # Note: Only common + auth endpoints are included.
