@@ -13,8 +13,8 @@ from app.models import User, TokenBlacklist
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
 
 # 랜덤 질문 API 관련 import
-from models import Question
-from routers import questions
+from app.models import Question
+from app.routers import questions
 
 # --------------------
 # Settings / Security
@@ -162,5 +162,5 @@ async def add_sample_questions():
     # 기존 질문이 있는지 확인
     existing_count = await Question.all().count()
     if existing_count == 0:
-        for question_text in questions_data:
-            await Question.create(question_text=question_text)
+        for question_content in questions_data:
+            await Question.create(content=question_content, category="자기성찰")

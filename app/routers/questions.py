@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from tortoise import Tortoise
-from models import Question
-from schemas import RandomQuestionResponse, QuestionResponse
+from app.models.models import Question
+from app.schemas.schemas import RandomQuestionResponse, QuestionResponse
 import random
 
 router = APIRouter()
@@ -30,7 +29,8 @@ async def get_random_question():
         return RandomQuestionResponse(
             question=QuestionResponse(
                 id=random_question.id,
-                question_text=random_question.question_text,
+                content=random_question.content,
+                category=random_question.category,
                 created_at=random_question.created_at
             ),
             message="오늘의 자기성찰 질문입니다."
@@ -55,7 +55,8 @@ async def get_all_questions():
         return [
             QuestionResponse(
                 id=question.id,
-                question_text=question.question_text,
+                content=question.content,
+                category=question.category,
                 created_at=question.created_at
             )
             for question in questions
