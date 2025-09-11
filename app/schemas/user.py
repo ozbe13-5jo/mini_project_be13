@@ -20,6 +20,7 @@ class UserSignupResponse(BaseModel):
     username: str
     id: int
     email: EmailStr
+    password: str
     nickname: Optional[str] = None
     name: Optional[str] = None
     phone: Optional[str] = None

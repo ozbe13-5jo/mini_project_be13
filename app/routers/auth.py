@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from app.models import User
-from app.schemas.user import UserPostCreate, UserPostLogin, UserPostResponse
+from app.schemas.user import UserPostCreate, UserPostLogin, UserPostResponse, UserSignupRequest, UserSignupResponse
 from app.auth.auth import create_access_token  # JWT 생성 함수
 from app.models import TokenBlacklist
 
@@ -42,6 +42,20 @@ async def register(user: UserPostCreate) -> UserPostResponse:
         created_at=user_obj.created_at
     )
 
+@router.post("/signup", response_model=UserSignupResponse, status_code=201)
+async def signup(payload: UserSignupRequest):
+    hashed_password = get_password_hash(payload.password)
+    try:
+        user = await User.create(
+            username=payload.username,
+            email=payload.email,
+            password_hash=hashed_password  # ⚠ 여기 주의
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    # 3️⃣ 반환
+    return {"msg": "User created", "id": user.id}
 
 # 로그인
 @router.post("/login")

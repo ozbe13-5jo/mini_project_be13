@@ -123,12 +123,13 @@ async def add_sample_questions():
 @app.post("/api/users/signup", response_model=UserResponse, status_code=201)
 async def signup(payload: UserSignupRequest) -> UserResponse:
     exists = await User.filter(email=str(payload.email)).first()
+    hashed_password = get_password_hash(payload.password)
     if exists:
         raise HTTPException(status_code=400, detail="Email already registered")
     user = await User.create(
         username=payload.username,
         email=str(payload.email),
-        password_hash=get_password_hash(payload.password),
+        password_hash=hashed_password,
         nickname=payload.nickname,
     )
     return UserResponse(
