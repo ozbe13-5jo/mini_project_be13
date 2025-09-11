@@ -1,9 +1,8 @@
-from typing import Optional, AsyncGenerator
+from typing import Optional
 from tortoise import Tortoise
 from tortoise.contrib.fastapi import register_tortoise
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
-import asyncio
+
 
 DB_URL = "postgres://testuser:asdfg123@localhost:5432/testdb"
 
@@ -24,8 +23,7 @@ async def close_db():
     await Tortoise.close_connections()
 
 
-def init_tortoise(app: Optional[FastAPI] = None, db_url: Optional[str] = None) -> None:
-    if app:
+def init_tortoise(app: FastAPI, db_url: Optional[str] = None) -> None:
         register_tortoise(
             app,
             db_url=DB_URL,
@@ -33,17 +31,3 @@ def init_tortoise(app: Optional[FastAPI] = None, db_url: Optional[str] = None) -
             generate_schemas=True,
             add_exception_handlers=True,
     )
-    else:
-        asyncio.run(Tortoise.init(
-            db_url=db_url,
-            modules={"models": ["app.models"]}
-        ))
-        asyncio.run(Tortoise.generate_schemas())
-
-@asynccontextmanager
-async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
-    # 앱 시작 시 DB 초기화
-    await init_db()
-    yield
-    # 앱 종료 시 DB 연결 종료
-    await close_db()
