@@ -130,7 +130,6 @@ async def signup(payload: UserSignupRequest) -> UserResponse:
         username=payload.username,
         email=str(payload.email),
         password_hash=hashed_password,
-        nickname=payload.nickname,
     )
     return UserResponse(
         id=user.id,
