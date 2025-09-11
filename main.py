@@ -1,14 +1,14 @@
 from datetime import datetime, timedelta, timezone
 import os
 from typing import Optional
-
+import asyncio
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from tortoise.contrib.fastapi import register_tortoise
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-# from app.db import init_tortoise
+from app.db import init_tortoise
 from app.models import User, TokenBlacklist, Question
 from app.routers import quote, questions, diary, auth
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
@@ -167,3 +167,10 @@ async def me(user: User = Depends(get_current_user)) -> UserResponse:
     return UserResponse(
         id=user.id, username=user.username, email=user.email, nickname=user.nickname, created_at=user.created_at
     )
+
+def run_add_questions():
+    init_tortoise(app)  # DB 연결
+    asyncio.run(add_sample_questions())  # 질문 추가
+    print("샘플 질문이 DB에 추가되었습니다!")
+if __name__ == "__main__":
+    run_add_questions()
