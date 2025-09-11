@@ -20,7 +20,7 @@ async def random_quote():
     if not quotes:
         return {"message": "No quotes available."}
     quote = random.choice(quotes)  # DB에서 가져온 리스트 중 랜덤 선택
-    return {"id": quote.id, "content": quote.quote_content, "author": quote.author}
+    return quote
 
 # 북마크 조회
 @router.get("/{quote_id}/bookmark")
