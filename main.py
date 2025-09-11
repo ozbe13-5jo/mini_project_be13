@@ -168,9 +168,3 @@ async def me(user: User = Depends(get_current_user)) -> UserResponse:
         id=user.id, username=user.username, email=user.email, nickname=user.nickname, created_at=user.created_at
     )
 
-def run_add_questions(): # DB 연결
-    init_tortoise(app, db_url=os.getenv("DB_URL"))
-    asyncio.run(add_sample_questions())  # 질문 추가
-    print("샘플 질문이 DB에 추가되었습니다!")
-if __name__ == "__main__":
-    run_add_questions()

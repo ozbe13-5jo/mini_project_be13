@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from app.models.models import Quote
 from app.db import init_db, close_db
 
+
 URL = "http://quotes.toscrape.com/"
 
 def fetch_quotes():
