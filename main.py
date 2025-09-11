@@ -126,6 +126,7 @@ async def signup(payload: UserSignupRequest) -> UserResponse:
     if exists:
         raise HTTPException(status_code=400, detail="Email already registered")
     user = await User.create(
+        username=payload.username,
         email=str(payload.email),
         password_hash=get_password_hash(payload.password),
         nickname=payload.nickname,
