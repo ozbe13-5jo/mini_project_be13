@@ -3,7 +3,7 @@ from tortoise import Tortoise
 from tortoise.contrib.fastapi import register_tortoise
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-
+import asyncio
 
 DB_URL = "postgres://testuser:asdfg123@localhost:5432/testdb"
 
@@ -24,21 +24,21 @@ async def close_db():
     await Tortoise.close_connections()
 
 
-def init_tortoise(app: FastAPI, db_url: Optional[str] = None) -> None:
-    """
-    Register Tortoise ORM with FastAPI. Call from your app startup.
-
-    Example:
-        from app.db import init_tortoise
-        init_tortoise(app, db_url="sqlite://db.sqlite3")
-    """
-    register_tortoise(
-        app,
-        db_url=db_url,
-        modules={"models": ["app.models"]},
-        generate_schemas=True,
-        add_exception_handlers=True,
+def init_tortoise(app: Optional[FastAPI] = None, db_url: Optional[str] = None) -> None:
+    if app:
+        register_tortoise(
+            app,
+            db_url=DB_URL,
+            modules={"models": ["app.models"]},
+            generate_schemas=True,
+            add_exception_handlers=True,
     )
+    else:
+        asyncio.run(Tortoise.init(
+            db_url=db_url,
+            modules={"models": ["app.models"]}
+        ))
+        asyncio.run(Tortoise.generate_schemas())
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
