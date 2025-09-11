@@ -19,9 +19,10 @@ class DiaryUpdate(BaseModel):
 # 응답
 class DiaryResponse(DiaryBase):
     id: int
-    user_id: int
-    created_at: datetime
-    updated_at: datetime
+    title: str
+    content: str
+    user_id: int  # ORM 객체의 user.id에서 가져옴
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }

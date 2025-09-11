@@ -4,10 +4,11 @@ from typing import Optional
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from tortoise.contrib.fastapi import register_tortoise
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from app.db import init_tortoise
+# from app.db import init_tortoise
 from app.models import User, TokenBlacklist, Question
 from app.routers import quote, questions, diary
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
@@ -71,7 +72,12 @@ app = FastAPI(title="Diary Project")
 
 
 # ⚠ 수정: lifespan 대신 init_tortoise 직접 호출, DB 연결 및 예외 핸들링 포함
-init_tortoise(app, db_url=os.getenv("DB_URL", "postgres://testuser:asdfg123@localhost:5432/testdb"))
+register_tortoise(
+    app,
+    db_url=os.getenv("DB_URL", "postgres://testuser:asdfg123@localhost:5432/testdb"),
+    modules={"models":["app.models"]},
+    generate_schemas=True,
+)
 
 
 # --------------------

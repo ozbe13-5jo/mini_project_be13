@@ -41,7 +41,7 @@ def init_tortoise(app: FastAPI, db_url: Optional[str] = None) -> None:
     )
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     # 앱 시작 시 DB 초기화
     await init_db()
     yield

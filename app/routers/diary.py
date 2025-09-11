@@ -15,7 +15,7 @@ async def create_diary(
     diary: DiaryCreate,
     current_user: int = Depends(get_current_user)
 ):
-    new_diary = await Diary.create(**diary.dict(), author_id=current_user)
+    new_diary = await Diary.create(**diary.model_dump(), author_id=current_user)
     return await DiaryResponse.from_tortoise_orm(new_diary)
 
 # READ (단일)
@@ -46,7 +46,7 @@ async def update_diary(
     if not diary:
         raise HTTPException(status_code=404, detail="Diary not found")
 
-    update_data = diary_update.dict(exclude_unset=True)
+    update_data = diary_update.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(diary, key, value)
     await diary.save()

@@ -10,8 +10,10 @@ class User(models.Model):
     username = fields.CharField(max_length=255)
     email = fields.CharField(max_length=255, unique=True)
     password = fields.CharField(max_length=255)
+    password_hash = fields.CharField(max_length=255)
     nickname = fields.CharField(max_length=255, null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
+    diaries: fields.ReverseRelation["Diary"]
 
     async def get_random_quote(self):
         quotes = await Quote.all()
