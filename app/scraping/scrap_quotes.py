@@ -12,10 +12,10 @@ def fetch_quotes():
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
     quotes = []
-    for div in soup.select(".quote"):
+    for idx, div in enumerate(soup.select(".quote"), start=1):
         text = div.select_one(".text").get_text(strip=True)
         author = div.select_one(".author").get_text(strip=True)
-        quotes.append({"quote_content": text, "author": author})
+        quotes.append({"quote_id":idx, "quote_content": text, "author": author})
     return quotes
 
 async def save_quotes(quotes):
