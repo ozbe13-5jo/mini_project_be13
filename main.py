@@ -10,7 +10,7 @@ from passlib.context import CryptContext
 
 # from app.db import init_tortoise
 from app.models import User, TokenBlacklist, Question
-from app.routers import quote, questions, diary
+from app.routers import quote, questions, diary, auth
 from app.schemas import UserSignupRequest, UserResponse, TokenPair
 
 # --------------------
@@ -87,6 +87,7 @@ app.include_router(questions.router, prefix="/api/questions", tags=["questions"]
 app.include_router(quote.router, prefix="/api/quotes", tags=["quotes"])  # prefix 명확히 지정
 app.include_router(diary.router, prefix="/api/diaries", tags=["diaries"])
 
+app.include_router(auth.router, prefix="/auth")
 # --------------------
 # 샘플 질문 추가 함수
 # --------------------

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from app.models import User
 from app.schemas.user import UserPostCreate, UserPostLogin, UserPostResponse
@@ -11,7 +12,7 @@ router = APIRouter(
 )
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
@@ -53,6 +54,6 @@ async def login(user: UserPostLogin):
 
 # 로그아웃 (선택, JWT blacklist 사용 시)
 @router.post("/logout")
-async def logout(token: str = Depends(...)):  # Depends로 OAuth2PasswordBearer 사용 가능
+async def logout(token: str = Depends(oauth2_scheme)):  # Depends로 OAuth2PasswordBearer 사용 가능
     await TokenBlacklist.get_or_create(token=token)
     return {"message": "Logged out"}
