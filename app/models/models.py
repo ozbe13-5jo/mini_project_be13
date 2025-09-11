@@ -1,5 +1,7 @@
 from tortoise import fields, models
 from tortoise.contrib.postgres.functions import Random
+from pydantic import BaseModel
+from datetime import datetime
 # ----------------------------
 # Users (회원가입/로그인)
 # ----------------------------
@@ -93,3 +95,9 @@ class Question(models.Model):
 
     def __str__(self):
         return self.content[:30]
+
+class QuoteResponse(BaseModel):
+    id: int
+    content: str
+    author: str
+    created_at: datetime

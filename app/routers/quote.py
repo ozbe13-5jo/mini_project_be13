@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from app.models import User, Quote
+from app.models import User, Quote, QuoteResponse
 from app.crud.bookmark import is_bookmarked, add_bookmark, remove_bookmark
 from app.dependencies import get_current_user
 import random
@@ -14,13 +14,18 @@ async def get_quotes():
     return await Quote.all()
 
 # 랜덤 명언 제공
-@router.get("/random", response_model=QuestionResponse)
+@router.get("/random", response_model=QuoteResponse)
 async def random_quote():
     quotes = await Quote.all()
     if not quotes:
         return {"message": "No quotes available."}
     quote = random.choice(quotes)  # DB에서 가져온 리스트 중 랜덤 선택
-    return quote
+    return  {
+    "id": quote.id,
+    "content": quote.quote_content,  # 필드 이름 맞춤
+    "author": quote.author,
+    "created_at": quote.created_at   # 필수
+}
 
 # 북마크 조회
 @router.get("/{quote_id}/bookmark")
