@@ -7,6 +7,7 @@ from datetime import datetime
 
 # 요청 데이터 스펙 (Request Body)
 class UserSignupRequest(BaseModel):
+    username: str
     email: EmailStr
     password: str
     nickname: Optional[str] = None
@@ -16,6 +17,7 @@ class UserSignupRequest(BaseModel):
 
 # 응답 데이터 스펙 (Response Body)s
 class UserSignupResponse(BaseModel):
+    username: str
     id: int
     email: EmailStr
     nickname: Optional[str] = None
