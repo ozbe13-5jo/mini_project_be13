@@ -4,6 +4,8 @@ from app.crud.bookmark import is_bookmarked, add_bookmark, remove_bookmark
 from app.dependencies import get_current_user
 import random
 
+from app.schemas.schemas import QuestionResponse
+
 router = APIRouter(tags=["quotes"])
 
 # 전체 명언 조회
@@ -12,8 +14,8 @@ async def get_quotes():
     return await Quote.all()
 
 # 랜덤 명언 제공
-@router.get("/random")
-async def random_quote(user: User = Depends(get_current_user)):
+@router.get("/random", response_model=QuestionResponse)
+async def random_quote():
     quotes = await Quote.all()
     if not quotes:
         return {"message": "No quotes available."}

@@ -4,34 +4,24 @@ from datetime import datetime
 
 
 # --- User Signup ---
+class UserBase(BaseModel):
+    username: Optional[str] =None
+    email: Optional[EmailStr] =None
+    name: Optional[str] =None
 
 # 요청 데이터 스펙 (Request Body)
-class UserSignupRequest(BaseModel):
-    username: str
-    email: EmailStr
+class UserSignupRequest(UserBase):
     password: str
-    nickname: Optional[str] = None
-    name: Optional[str] = None
-    phone: Optional[str] = None
-
 
 # 응답 데이터 스펙 (Response Body)s
-class UserSignupResponse(BaseModel):
-    username: str
+class UserSignupResponse(UserBase):
     id: int
-    email: EmailStr
-    password: str
-    nickname: Optional[str] = None
-    name: Optional[str] = None
-    phone: Optional[str] = None
     created_at: datetime
 
+    model_config = {"from_attributes": True}
 
-class UserResponse(BaseModel):
+class UserResponse(UserBase):
     id: int
-    username: Optional[str]
-    email : EmailStr
-    nickname : Optional[str]
     created_at : datetime
 
     model_config = {"from_attributes": True}
@@ -48,16 +38,15 @@ Response Body: UserSignupResponse
 Status Code: 201 Created
 """
 
-class UserPostCreate(BaseModel):
+class UserPostCreate(UserBase):
     username: str
 
 class UserPostLogin(BaseModel):
     username: str
     password: str
 
-class UserPostResponse(BaseModel):
+class UserPostResponse(UserBase):
     id: int
-    username: str
     created_at: datetime
 
     class Config:

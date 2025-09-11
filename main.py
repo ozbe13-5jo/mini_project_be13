@@ -136,7 +136,6 @@ async def signup(payload: UserSignupRequest) -> UserResponse:
         id=user.id,
         username=user.username,
         email=user.email,
-        nickname=user.nickname,
         created_at=user.created_at,
     )
 
@@ -167,6 +166,6 @@ async def logout(token: str = Depends(oauth2_scheme)) -> dict[str, str]:
 @app.get("/api/users/me", response_model=UserResponse)
 async def me(user: User = Depends(get_current_user)) -> UserResponse:
     return UserResponse(
-        id=user.id, username=user.username, email=user.email, nickname=user.nickname, created_at=user.created_at
+        id=user.id, username=user.username, email=user.email, created_at=user.created_at
     )
 

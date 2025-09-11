@@ -10,7 +10,6 @@ class User(models.Model):
     password_hash = fields.CharField(max_length=255)
     nickname = fields.CharField(max_length=255, null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
-    diaries: fields.ReverseRelation["Diary"]
 
     # Relations
     diaries: fields.ReverseRelation["Diary"]
