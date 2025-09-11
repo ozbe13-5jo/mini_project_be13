@@ -4,7 +4,7 @@ from app.crud.bookmark import is_bookmarked, add_bookmark, remove_bookmark
 from app.dependencies import get_current_user
 import random
 
-router = APIRouter(prefix="/quote", tags=["quote"])
+router = APIRouter(tags=["quotes"])
 
 # 전체 명언 조회
 @router.get("/")

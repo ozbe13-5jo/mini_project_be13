@@ -27,10 +27,13 @@ class UserSignupResponse(BaseModel):
 class UserResponse(BaseModel):
     id: int
     username: str
+    email : str
+    nickname : str
+    created_at : datetime
 
 class TokenPair(BaseModel):
     access_token: str
-    refresh_token: str
+    refresh_token: Optional[str] = None
 
 # 예시 API 엔드포인트 스펙 설명
 """
@@ -50,6 +53,7 @@ class UserPostLogin(BaseModel):
 class UserPostResponse(BaseModel):
     id: int
     username: str
+    created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True

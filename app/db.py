@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 
-DB_URL = "postgresql://testuser:asdfg123@localhost:5432/testdb"
+DB_URL = "postgres://testuser:asdfg123@localhost:5432/testdb"
 
 async def init_db():
     await Tortoise.init(
@@ -34,7 +34,7 @@ def init_tortoise(app: FastAPI, db_url: Optional[str] = None) -> None:
     """
     register_tortoise(
         app,
-        db_url=db_url or "sqlite://db.sqlite3",
+        db_url=db_url,
         modules={"models": ["app.models"]},
         generate_schemas=True,
         add_exception_handlers=True,

@@ -12,7 +12,7 @@ class UserRead(BaseModel):
     age: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 질문 관련 스키마
 class QuestionResponse(BaseModel):
