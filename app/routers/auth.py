@@ -25,13 +25,15 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # 회원가입
 @router.post("/register", response_model=UserPostResponse, status_code=201)
 async def register(user: UserPostCreate) -> UserPostResponse:
+    hashed_password = get_password_hash(user.password)
     exists = await User.filter(username=user.username).first()
     if exists:
         raise HTTPException(status_code=400, detail="Username already registered")
 
     user_obj = await User.create(
         username=user.username,
-        password_hash=get_password_hash(user.password)
+        email=user.email,
+        password_hash=hashed_password,
     )
 
     return UserPostResponse(

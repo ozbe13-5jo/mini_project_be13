@@ -1,5 +1,3 @@
-import random
-
 from tortoise import fields, models
 from tortoise.contrib.postgres.functions import Random
 # ----------------------------
@@ -15,24 +13,21 @@ class User(models.Model):
     created_at = fields.DatetimeField(auto_now_add=True)
     diaries: fields.ReverseRelation["Diary"]
 
-    async def get_random_quote(self):
-        quotes = await Quote.all()
-        if not quotes:
-            return None
-        return random.choice(quotes)
     # Relations
     diaries: fields.ReverseRelation["Diary"]
     bookmarks: fields.ReverseRelation["Bookmark"]
     tokens: fields.ReverseRelation["TokenBlacklist"]
 
-    @staticmethod
-    async def get_random_quote(self):
-        """DB에서 랜덤 명언 1개 반환"""
-        from app.models import Quote
-        return await Quote.all().order_by(Random()).first()
-
     def __str__(self):
         return self.username
+
+    @staticmethod
+    async def get_random_quote():
+        """DB에서 랜덤 명언 1개 반환"""
+        from app.models import Quote
+        return await Quote.all().order_by(Random()).first() #type: ignore
+
+
 
 
 # ----------------------------
