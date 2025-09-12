@@ -10,7 +10,7 @@ router = APIRouter(
 
 # CREATE
 @router.post("/", response_model=DiaryResponse)
-async def create_diary(diary: DiaryCreate, current_user=Depends(get_current_user)):
+async def create_diary(diary: DiaryCreate, current_user =Depends(get_current_user)):
     new_diary = await Diary.create(**diary.model_dump(), user=current_user)
     return DiaryResponse.model_validate(new_diary)
 
