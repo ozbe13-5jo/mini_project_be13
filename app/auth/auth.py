@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 from app.models import TokenBlacklist, User
 
-SECRET_KEY = "your-secret-key"
+SECRET_KEY = "0eff72053b0ad911fa654d4e26a8b48aebaffaf654d7b9077cf8318bd0880d34"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
